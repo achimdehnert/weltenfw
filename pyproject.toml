@@ -1,7 +1,7 @@
 [project]
 name = "weltenfw"
 version = "0.1.0"
-description = "WeltenHub Client Framework \u2014 typed REST client and Pydantic schemas for the WeltenHub Story Universe API"
+description = "WeltenHub Client Framework — typed REST client and Pydantic schemas for the WeltenHub Story Universe API"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
@@ -75,8 +75,6 @@ asyncio_mode = "auto"
 
 [tool.ruff]
 target-version = "py311"
-
-[tool.ruff.format]
 line-length = 100
 
 [tool.ruff.lint]
