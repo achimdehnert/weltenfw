@@ -6,15 +6,13 @@ Verifiziert aus apps/scenes/serializers.py.
 
 from __future__ import annotations
 
-from uuid import UUID
 from datetime import datetime
+from uuid import UUID
 
 from weltenfw.schema.base import BaseInput, BaseSchema
 
 
 class SceneBeatSchema(BaseSchema):
-    """Beat innerhalb einer Szene."""
-
     id: UUID
     scene: UUID
     beat_type: UUID | None = None
@@ -25,8 +23,6 @@ class SceneBeatSchema(BaseSchema):
 
 
 class SceneConnectionSchema(BaseSchema):
-    """Verbindung zwischen zwei Szenen."""
-
     id: UUID
     from_scene: UUID
     from_scene_title: str
@@ -38,8 +34,6 @@ class SceneConnectionSchema(BaseSchema):
 
 
 class SceneListSchema(BaseSchema):
-    """Scene in Listenansicht."""
-
     id: UUID
     title: str
     story: UUID
@@ -54,8 +48,6 @@ class SceneListSchema(BaseSchema):
 
 
 class SceneSchema(BaseSchema):
-    """Scene Detailansicht (alle Felder inkl. Beats)."""
-
     id: UUID
     tenant: UUID
     story: UUID
@@ -86,8 +78,6 @@ class SceneSchema(BaseSchema):
 
 
 class SceneCreateInput(BaseInput):
-    """Input fuer POST /scenes/ (Pflichtfelder required)."""
-
     story: UUID
     title: str
     chapter: UUID | None = None
@@ -111,8 +101,6 @@ class SceneCreateInput(BaseInput):
 
 
 class SceneUpdateInput(BaseInput):
-    """Input fuer PATCH /scenes/{id}/ (alle Felder optional)."""
-
     title: str | None = None
     chapter: UUID | None = None
     template: UUID | None = None

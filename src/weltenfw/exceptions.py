@@ -17,10 +17,7 @@ class WeltenError(Exception):
         self.message = message
 
     def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}"
-            f"(status_code={self.status_code!r}, message={self.message!r})"
-        )
+        return f"{self.__class__.__name__}(status_code={self.status_code!r}, message={self.message!r})"
 
 
 class NotFoundError(WeltenError):
@@ -47,9 +44,7 @@ class RateLimitError(WeltenError):
 class ValidationError(WeltenError):
     """HTTP 400/422 - Validierungsfehler im Request-Body."""
 
-    def __init__(
-        self, message: str = "Validation error", detail: dict | None = None
-    ) -> None:
+    def __init__(self, message: str = "Validation error", detail: dict | None = None) -> None:
         super().__init__(message, status_code=400)
         self.detail = detail or {}
 
@@ -62,11 +57,10 @@ class ServerError(WeltenError):
 
 
 class PaginationError(WeltenError):
-    """iter_all() hat das max_pages-Limit ueberschritten."""
+    """Pagination-Limit ueberschritten (Schutz vor Endlosschleifen)."""
 
     def __init__(self, max_pages: int) -> None:
         super().__init__(
-            f"iter_all() aborted after {max_pages} pages. "
-            "Set max_pages=None or increase the limit."
+            f"iter_all() aborted after {max_pages} pages. Set max_pages=None or increase the limit."
         )
         self.max_pages = max_pages

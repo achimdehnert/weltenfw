@@ -6,15 +6,13 @@ Verifiziert aus apps/stories/serializers.py.
 
 from __future__ import annotations
 
-from uuid import UUID
 from datetime import datetime
+from uuid import UUID
 
 from weltenfw.schema.base import BaseInput, BaseSchema
 
 
 class ChapterSchema(BaseSchema):
-    """Kapitel einer Story."""
-
     id: UUID
     story: UUID
     title: str
@@ -25,8 +23,6 @@ class ChapterSchema(BaseSchema):
 
 
 class PlotThreadSchema(BaseSchema):
-    """Plot-Thread / roter Faden einer Story."""
-
     id: UUID
     story: UUID
     title: str
@@ -38,8 +34,6 @@ class PlotThreadSchema(BaseSchema):
 
 
 class TimelineEventSchema(BaseSchema):
-    """Zeitleisten-Ereignis."""
-
     id: UUID
     story: UUID
     title: str
@@ -51,8 +45,6 @@ class TimelineEventSchema(BaseSchema):
 
 
 class StoryListSchema(BaseSchema):
-    """Story in Listenansicht."""
-
     id: UUID
     title: str
     slug: str
@@ -65,8 +57,6 @@ class StoryListSchema(BaseSchema):
 
 
 class StorySchema(BaseSchema):
-    """Story Detailansicht (alle Felder)."""
-
     id: UUID
     tenant: UUID
     world: UUID
@@ -88,8 +78,6 @@ class StorySchema(BaseSchema):
 
 
 class StoryCreateInput(BaseInput):
-    """Input fuer POST /stories/ (Pflichtfelder required)."""
-
     world: UUID
     title: str
     genre: UUID | None = None
@@ -104,8 +92,6 @@ class StoryCreateInput(BaseInput):
 
 
 class StoryUpdateInput(BaseInput):
-    """Input fuer PATCH /stories/{id}/ (alle Felder optional)."""
-
     title: str | None = None
     genre: UUID | None = None
     subtitle: str | None = None

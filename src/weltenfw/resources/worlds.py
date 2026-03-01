@@ -8,7 +8,6 @@ from typing import Any
 
 from weltenfw.resources.base import BaseResource
 from weltenfw.schema.world import (
-    WorldListSchema,
     WorldRuleSchema,
     WorldSchema,
 )

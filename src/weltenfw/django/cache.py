@@ -16,15 +16,7 @@ from typing import Any
 
 
 class DjangoCache:
-    """Django-Cache-Backend fuer weltenfw Lookups.
-
-    Multiprocess-safe via Django's Cache-Framework (Redis empfohlen).
-    Alle Cache-Keys werden mit 'weltenfw:' praefixiert.
-
-    Args:
-        alias: Django-Cache-Alias (default: 'default').
-        ttl:   TTL in Sekunden (default: 3600).
-    """
+    """Django-Cache-Backend fuer weltenfw Lookups."""
 
     _PREFIX = "weltenfw:"
 
@@ -33,8 +25,7 @@ class DjangoCache:
             from django.core.cache import caches as _caches  # noqa: F401
         except ImportError as exc:
             raise ImportError(
-                "DjangoCache requires Django. "
-                "Install with: pip install weltenfw[django]"
+                "DjangoCache requires Django. Install with: pip install weltenfw[django]"
             ) from exc
         self._alias = alias
         self._ttl = ttl
@@ -61,12 +52,6 @@ class DjangoCache:
         caches[self._alias].delete(self._key(key))
 
     def clear(self) -> None:
-        """Loescht alle weltenfw-Cache-Eintraege.
-
-        Nutzt delete_pattern() falls verfuegbar (django-redis), sonst Fallback
-        auf registrierte Keys. Kein stilles Vergessen neuer Lookup-Typen:
-        delete_pattern matcht alle 'weltenfw:*'-Keys automatisch.
-        """
         from django.core.cache import caches
 
         cache = caches[self._alias]

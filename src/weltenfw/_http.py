@@ -28,13 +28,7 @@ from weltenfw.exceptions import (
 
 
 class HttpTransport:
-    """Synchroner HTTP-Transport auf Basis von httpx.
-
-    Args:
-        base_url: Basis-URL der WeltenHub-API (z.B. 'https://weltenforger.com/api/v1').
-        token:    DRF-Auth-Token.
-        timeout:  Request-Timeout in Sekunden (default: 30.0).
-    """
+    """Synchroner HTTP-Transport auf Basis von httpx."""
 
     def __init__(self, base_url: str, token: str, timeout: float = 30.0) -> None:
         self._base_url = base_url.rstrip("/")
@@ -45,7 +39,6 @@ class HttpTransport:
         )
 
     def _url(self, path: str) -> str:
-        """Normalisiert Pfad: fuegt trailing slash hinzu, verbindet mit base_url."""
         if not path.startswith("/"):
             path = "/" + path
         if not path.endswith("/"):
@@ -53,7 +46,6 @@ class HttpTransport:
         return urljoin(self._base_url + "/", path.lstrip("/"))
 
     def _raise_for_status(self, response: httpx.Response) -> None:
-        """Mapped HTTP-Fehlercodes auf WeltenError-Subklassen."""
         code = response.status_code
         if code < 400:
             return
@@ -68,9 +60,7 @@ class HttpTransport:
         if code == 429:
             raise RateLimitError(str(detail))
         if code in (400, 422):
-            raise ValidationError(
-                str(detail), detail=detail if isinstance(detail, dict) else {}
-            )
+            raise ValidationError(str(detail), detail=detail if isinstance(detail, dict) else {})
         if code >= 500:
             raise ServerError(str(detail), status_code=code)
         raise WeltenError(str(detail), status_code=code)
@@ -142,9 +132,7 @@ class AsyncHttpTransport:
         if code == 429:
             raise RateLimitError(str(detail))
         if code in (400, 422):
-            raise ValidationError(
-                str(detail), detail=detail if isinstance(detail, dict) else {}
-            )
+            raise ValidationError(str(detail), detail=detail if isinstance(detail, dict) else {})
         if code >= 500:
             raise ServerError(str(detail), status_code=code)
         raise WeltenError(str(detail), status_code=code)

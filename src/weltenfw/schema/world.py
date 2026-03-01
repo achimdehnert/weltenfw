@@ -6,15 +6,13 @@ Verifiziert aus apps/worlds/serializers.py.
 
 from __future__ import annotations
 
-from uuid import UUID
 from datetime import datetime
+from uuid import UUID
 
 from weltenfw.schema.base import BaseInput, BaseSchema
 
 
 class WorldRuleSchema(BaseSchema):
-    """Weltenbau-Regel (read-only)."""
-
     id: UUID
     world: UUID
     rule_type: str
@@ -26,8 +24,6 @@ class WorldRuleSchema(BaseSchema):
 
 
 class WorldListSchema(BaseSchema):
-    """World in Listenansicht (reduzierte Felder)."""
-
     id: UUID
     name: str
     slug: str
@@ -39,8 +35,6 @@ class WorldListSchema(BaseSchema):
 
 
 class WorldSchema(BaseSchema):
-    """World Detailansicht (alle Felder)."""
-
     id: UUID
     tenant: UUID
     name: str
@@ -62,8 +56,6 @@ class WorldSchema(BaseSchema):
 
 
 class WorldCreateInput(BaseInput):
-    """Input fuer POST /worlds/ (alle Pflichtfelder required)."""
-
     name: str
     genre: UUID | None = None
     subtitle: str | None = None
@@ -79,8 +71,6 @@ class WorldCreateInput(BaseInput):
 
 
 class WorldUpdateInput(BaseInput):
-    """Input fuer PATCH /worlds/{id}/ (alle Felder optional)."""
-
     name: str | None = None
     genre: UUID | None = None
     subtitle: str | None = None
