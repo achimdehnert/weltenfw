@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import Any
 
 from weltenfw.resources.base import BaseResource
-from weltenfw.schema.scene import SceneBeatSchema, SceneListSchema, SceneSchema
+from weltenfw.schema.scene import SceneBeatSchema, SceneSchema
 
 
 class SceneResource(BaseResource[SceneSchema]):

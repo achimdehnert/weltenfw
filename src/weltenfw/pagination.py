@@ -7,8 +7,8 @@ iter_all() und aiter_all() paginieren automatisch mit Schutz vor Endlosschleifen
 
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator, Generator
-from typing import Callable, Generic, TypeVar
+from collections.abc import AsyncGenerator, Callable, Generator
+from typing import Generic, TypeVar
 
 from pydantic import ConfigDict
 

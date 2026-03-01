@@ -23,7 +23,7 @@ from weltenfw.pagination import PageResult, iter_all
 from weltenfw.schema.base import BaseInput, BaseSchema
 
 S = TypeVar("S", bound=BaseSchema)
-I = TypeVar("I", bound=BaseInput)
+InputT = TypeVar("InputT", bound=BaseInput)
 
 
 class BaseResource(Generic[S]):

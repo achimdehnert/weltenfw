@@ -9,7 +9,6 @@ from typing import Any
 from weltenfw.resources.base import BaseResource
 from weltenfw.schema.character import (
     CharacterArcSchema,
-    CharacterListSchema,
     CharacterRelationshipSchema,
     CharacterSchema,
 )

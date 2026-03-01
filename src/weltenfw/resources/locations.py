@@ -5,7 +5,7 @@ weltenfw.resources.locations - Location Resource
 from __future__ import annotations
 
 from weltenfw.resources.base import BaseResource
-from weltenfw.schema.location import LocationListSchema, LocationSchema
+from weltenfw.schema.location import LocationSchema
 
 
 class LocationResource(BaseResource[LocationSchema]):
