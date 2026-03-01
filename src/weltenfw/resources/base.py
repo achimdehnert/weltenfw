@@ -7,6 +7,10 @@ HTTP-Verben sind explizit:
   update()         -> PUT    (alle Felder, ersetzt vollstaendig)
   partial_update() -> PATCH  (nur geaenderte Felder)
   delete()         -> DELETE
+
+Wichtig: model_dump(mode='json') stellt sicher dass UUID/datetime-Objekte
+zu JSON-serialisierbaren Typen (str) konvertiert werden, bevor sie an
+httpx json= weitergegeben werden.
 """
 
 from __future__ import annotations
@@ -65,18 +69,25 @@ class BaseResource(Generic[S]):
 
     def create(self, payload: BaseInput) -> S:
         """POST /{base}/ -> S"""
-        data = self._http.post(self._base_path, json=payload.model_dump(exclude_none=True))
+        data = self._http.post(
+            self._base_path,
+            json=payload.model_dump(mode="json", exclude_none=True),
+        )
         return self._schema_cls.model_validate(data)
 
     def update(self, pk: Any, payload: BaseInput) -> S:
         """PUT /{base}/{pk}/ -> S (ersetzt vollstaendig)"""
-        data = self._http.put(self._detail_path(pk), json=payload.model_dump())
+        data = self._http.put(
+            self._detail_path(pk),
+            json=payload.model_dump(mode="json"),
+        )
         return self._schema_cls.model_validate(data)
 
     def partial_update(self, pk: Any, payload: BaseInput) -> S:
         """PATCH /{base}/{pk}/ -> S (nur geaenderte Felder)"""
         data = self._http.patch(
-            self._detail_path(pk), json=payload.model_dump(exclude_none=True)
+            self._detail_path(pk),
+            json=payload.model_dump(mode="json", exclude_none=True),
         )
         return self._schema_cls.model_validate(data)
 
@@ -107,19 +118,24 @@ class BaseResource(Generic[S]):
     async def acreate(self, payload: BaseInput) -> S:
         """POST /{base}/ -> S (async)"""
         data = await self._async_http.post(
-            self._base_path, json=payload.model_dump(exclude_none=True)
+            self._base_path,
+            json=payload.model_dump(mode="json", exclude_none=True),
         )
         return self._schema_cls.model_validate(data)
 
     async def aupdate(self, pk: Any, payload: BaseInput) -> S:
         """PUT /{base}/{pk}/ -> S (async)"""
-        data = await self._async_http.put(self._detail_path(pk), json=payload.model_dump())
+        data = await self._async_http.put(
+            self._detail_path(pk),
+            json=payload.model_dump(mode="json"),
+        )
         return self._schema_cls.model_validate(data)
 
     async def apartial_update(self, pk: Any, payload: BaseInput) -> S:
         """PATCH /{base}/{pk}/ -> S (async)"""
         data = await self._async_http.patch(
-            self._detail_path(pk), json=payload.model_dump(exclude_none=True)
+            self._detail_path(pk),
+            json=payload.model_dump(mode="json", exclude_none=True),
         )
         return self._schema_cls.model_validate(data)
 
