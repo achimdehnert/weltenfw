@@ -17,7 +17,10 @@ class WeltenError(Exception):
         self.message = message
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(status_code={self.status_code!r}, message={self.message!r})"
+        return (
+            f"{self.__class__.__name__}"
+            f"(status_code={self.status_code!r}, message={self.message!r})"
+        )
 
 
 class NotFoundError(WeltenError):
