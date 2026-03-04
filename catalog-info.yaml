@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: weltenfw
+  description: weltenfw — Python framework for world-building data models, story universes, and narrative structures
+  tags: [python, framework, world-building, narrative, library]
+  annotations:
+    github.com/project-slug: achimdehnert/weltenfw
+    pypi/package-name: "weltenfw"
+    pypi/publish-workflow: "publish.yml"
+spec:
+  type: library
+  lifecycle: active
+  owner: achimdehnert
+  system: ai-platform
+  domain: content
+  providesApis: []
+  dependsOn: []
