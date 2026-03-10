@@ -76,6 +76,88 @@ result = client.tenants.provision(ProvisionRequest(
 # ProvisionResponse(token="...", tenant_id=UUID("..."), created=True)
 ```
 
+## Storage Backend Pattern (v0.2.0, ADR-117)
+
+`weltenfw` ships a **configurable storage backend** so any app (bfagent,
+travel-beat, …) can write worlds and characters directly into Weltenhub-DB
+without duplicating data or building a sync pipeline.
+
+### Two scenarios — same code
+
+```python
+from weltenfw import WeltenhubBackend
+
+backend = WeltenhubBackend(
+    base_url="https://weltenforger.com/api/v1",
+    token=token,          # user token (Scenario A) or service token (Scenario B)
+)
+
+result = backend.create_world(name="Aldoria", description="Kingdom of runes")
+# result.id      → Weltenhub UUID (stored locally as FK reference only)
+# result.ok      → True on success
+# result.backend → "weltenhub"
+```
+
+**Scenario A — user has a Weltenhub account:**
+`token = user.weltenhub_token` → world visible in Weltenhub UI immediately.
+
+**Scenario B — user not yet linked ("data without UI"):**
+`token = WELTENHUB_API_KEY` (service token) → world stored in Weltenhub-DB,
+UUID available, but Weltenhub UI features locked until the user links their account.
+No data duplication. The consumer app stores only the UUID.
+
+### User provisioning (S2S, idempotent)
+
+```python
+token = WeltenhubBackend.provision_user(
+    username="bf_hugo",
+    email="hugo@example.com",
+    base_url="https://weltenforger.com/api/v1",
+    service_token=WELTENHUB_API_KEY,
+)
+# Returns per-user token for Scenario A
+```
+
+### Characters
+
+```python
+char = backend.create_character(
+    world_id=str(world.id),
+    name="Elara",
+    personality="Curious and fearless",
+    is_protagonist=True,
+)
+chars = backend.list_characters(world_id=str(world.id))
+```
+
+### LocalWorldBackend (for tests / offline)
+
+```python
+from weltenfw import LocalWorldBackend
+
+backend = LocalWorldBackend()   # no-op, returns empty results
+result = backend.create_world(name="Test")
+# result.id = ""  — caller manages local DB
+# result.backend = "local"
+```
+
+### Backend Protocol
+
+All backends implement `AbstractWorldBackend` (structural subtyping via
+`Protocol`). You can write your own backend (e.g. `ObsidianBackend`) without
+changing any call sites:
+
+```python
+from weltenfw.backends.base import AbstractWorldBackend, WorldResult
+
+class MyBackend:
+    def create_world(self, name: str, **kw) -> WorldResult:
+        ...
+    # implement remaining protocol methods
+```
+
+See [`src/weltenfw/backends/`](src/weltenfw/backends/) for full source.
+
 ## Architecture
 
 - **1 Client = 1 Token = 1 Tenant** — Multi-tenant consumers instantiate
@@ -86,9 +168,13 @@ result = client.tenants.provision(ProvisionRequest(
   DjangoCache for Redis).
 - **Trailing-slash normalization** — prevents silent `POST→GET` method loss
   on Django's 301 redirect.
+- **Storage Backend Pattern** — swappable write channel (ADR-117). Weltenhub-DB
+  is the single source of truth; consumer apps store only the UUID reference.
 
 ## Links
 
 - [WeltenHub API Docs](https://weltenforger.com/api/docs/)
-- [ADR-032 Architecture Decision](https://github.com/achimdehnert/weltenhub/blob/main/docs/adr/ADR-032-weltenfw-pypi-client-package.md)
+- [ADR-032](https://github.com/achimdehnert/weltenhub/blob/main/docs/adr/ADR-032-weltenfw-pypi-client-package.md) — weltenfw package decision
+- [ADR-117](https://github.com/achimdehnert/platform/blob/main/docs/adr/ADR-117-shared-world-layer-worldfw.md) — Shared World Layer / Storage Backend Pattern
+- [backends/ README](src/weltenfw/backends/README.md)
 - [Changelog](CHANGELOG.md)
