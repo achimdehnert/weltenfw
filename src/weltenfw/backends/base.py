@@ -84,6 +84,24 @@ class SceneResult:
 
 
 @dataclass(frozen=True)
+class StoryResult:
+    """Returned by AbstractWorldBackend.create_story / get_story / list_stories."""
+
+    id: str
+    title: str
+    world_id: str = ""
+    genre_name: str = ""
+    status: str = ""
+    synopsis: str = ""
+    backend: str = "unknown"
+    error: str | None = None
+
+    @property
+    def ok(self) -> bool:
+        return self.error is None
+
+
+@dataclass(frozen=True)
 class WorldPage:
     """Paginated list of worlds."""
 
@@ -112,6 +130,14 @@ class ScenePage:
     """Paginated list of scenes."""
 
     results: list[SceneResult] = field(default_factory=list)
+    count: int = 0
+
+
+@dataclass(frozen=True)
+class StoryPage:
+    """Paginated list of stories."""
+
+    results: list[StoryResult] = field(default_factory=list)
     count: int = 0
 
 

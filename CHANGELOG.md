@@ -4,6 +4,45 @@ All notable changes to `weltenfw` are documented here.
 
 Format: [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] — 2026-03-10
+
+### Added
+
+- `backends/base.py`: `LocationResult`, `LocationPage` — typed result types for locations
+- `backends/base.py`: `SceneResult`, `ScenePage` — typed result types for scenes
+- `backends/base.py`: `StoryResult`, `StoryPage` — typed result types for stories
+- `backends/weltenhub.py`: `list_locations(world_id, page, page_size)` — `GET /locations/?world=`
+- `backends/weltenhub.py`: `create_location(world_id, name, description, parent_id)` — `POST /locations/`
+- `backends/weltenhub.py`: `list_scenes(story_id, page, page_size)` — `GET /scenes/?story=`
+- `backends/weltenhub.py`: `create_scene(story_id, title, summary, order)` — `POST /scenes/`
+- `backends/weltenhub.py`: `list_stories(world_id, page, page_size)` — `GET /stories/?world=`
+- `backends/weltenhub.py`: `create_story(world_id, title, synopsis)` — `POST /stories/`
+- `backends/__init__.py`: all new types exported in `__all__`
+- `README.md`: complete Backend API Reference with method tables and result type overview
+
+### Changed
+
+- `get_world_context()` in bfagent `WeltenhubService` now uses
+  `backend.list_locations()` instead of raw HTTP — no more `_fetch_locations()` workaround
+
+---
+
+## [0.2.0] — 2026-03-05
+
+### Added
+
+- `backends/base.py`: `AbstractWorldBackend` Protocol (structural subtyping,
+  `@runtime_checkable`), `WorldResult`, `WorldPage`, `CharacterResult`, `CharacterPage`
+- `backends/weltenhub.py`: `WeltenhubBackend` — concrete backend writing to Weltenhub via REST:
+  `provision_user()` (classmethod, S2S), `create_world()`, `get_world()`, `list_worlds()`,
+  `update_world()`, `create_character()`, `get_character()`, `list_characters()`
+- `backends/local.py`: `LocalWorldBackend` — no-op stub for tests / offline mode
+- `backends/__init__.py`: public `__all__` export
+- bfagent `WeltenhubService`: `ensure_world_registered()`, `get_world_context()`,
+  `register_standalone_world()` using `WeltenhubBackend`
+
+---
+
 ## [0.1.0] — 2026-03-01
 
 First Alpha release. All Sprint 1–4 deliverables complete.

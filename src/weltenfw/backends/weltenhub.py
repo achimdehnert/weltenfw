@@ -29,12 +29,17 @@ from weltenfw.backends.base import (
     LocationResult,
     ScenePage,
     SceneResult,
+    StoryPage,
+    StoryResult,
     WorldPage,
     WorldResult,
 )
 from weltenfw.client import WeltenClient
 from weltenfw.exceptions import WeltenError
 from weltenfw.schema.character import CharacterCreateInput
+from weltenfw.schema.location import LocationCreateInput
+from weltenfw.schema.scene import SceneCreateInput
+from weltenfw.schema.story import StoryCreateInput
 from weltenfw.schema.tenant import ProvisionRequest
 from weltenfw.schema.world import WorldCreateInput, WorldUpdateInput
 
@@ -388,3 +393,157 @@ class WeltenhubBackend:
                 extra={"story_id": story_id, "error": str(exc)},
             )
             return ScenePage()
+
+    def create_scene(
+        self,
+        story_id: str,
+        title: str,
+        summary: str = "",
+        order: int = 0,
+        **kwargs: object,
+    ) -> SceneResult:
+        """Create a scene in the given story."""
+        try:
+            with self._client() as client:
+                scene = client.scenes.create(
+                    SceneCreateInput(
+                        story=UUID(story_id),
+                        title=title,
+                        summary=summary or None,
+                        order=order,
+                    )
+                )
+            logger.info(
+                "weltenhub_scene_created",
+                extra={"scene_id": str(scene.id), "title": title},
+            )
+            return SceneResult(
+                id=str(scene.id),
+                title=scene.title,
+                story_id=story_id,
+                order=scene.order,
+                backend=_BACKEND,
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_scene_create_failed",
+                extra={"title": title, "error": str(exc)},
+            )
+            return SceneResult(
+                id="", title=title, story_id=story_id,
+                backend=_BACKEND, error=str(exc),
+            )
+
+    def create_location(
+        self,
+        world_id: str,
+        name: str,
+        description: str = "",
+        parent_id: str | None = None,
+        **kwargs: object,
+    ) -> LocationResult:
+        """Create a location in the given world."""
+        try:
+            with self._client() as client:
+                loc = client.locations.create(
+                    LocationCreateInput(
+                        world=UUID(world_id),
+                        name=name,
+                        description=description or None,
+                        parent=UUID(parent_id) if parent_id else None,
+                    )
+                )
+            logger.info(
+                "weltenhub_location_created",
+                extra={"loc_id": str(loc.id), "name": name},
+            )
+            return LocationResult(
+                id=str(loc.id),
+                name=loc.name,
+                world_id=world_id,
+                description=loc.description or "",
+                full_path=loc.full_path or "",
+                backend=_BACKEND,
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_location_create_failed",
+                extra={"name": name, "error": str(exc)},
+            )
+            return LocationResult(
+                id="", name=name, world_id=world_id,
+                backend=_BACKEND, error=str(exc),
+            )
+
+    # ------------------------------------------------------------------
+    # Story operations
+    # ------------------------------------------------------------------
+
+    def list_stories(
+        self, world_id: str, page: int = 1, page_size: int = 100
+    ) -> StoryPage:
+        """List stories belonging to the given world."""
+        try:
+            with self._client() as client:
+                page_result = client.stories.list(
+                    page=page, world=world_id, page_size=page_size
+                )
+            return StoryPage(
+                results=[
+                    StoryResult(
+                        id=str(s.id),
+                        title=s.title,
+                        world_id=world_id,
+                        genre_name=s.genre_name or "",
+                        status=s.status or "",
+                        backend=_BACKEND,
+                    )
+                    for s in page_result.results
+                ],
+                count=page_result.count,
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_list_stories_failed",
+                extra={"world_id": world_id, "error": str(exc)},
+            )
+            return StoryPage()
+
+    def create_story(
+        self,
+        world_id: str,
+        title: str,
+        synopsis: str = "",
+        **kwargs: object,
+    ) -> StoryResult:
+        """Create a story in the given world."""
+        try:
+            with self._client() as client:
+                story = client.stories.create(
+                    StoryCreateInput(
+                        world=UUID(world_id),
+                        title=title,
+                        synopsis=synopsis or None,
+                    )
+                )
+            logger.info(
+                "weltenhub_story_created",
+                extra={"story_id": str(story.id), "title": title},
+            )
+            return StoryResult(
+                id=str(story.id),
+                title=story.title,
+                world_id=world_id,
+                genre_name=story.genre_name or "",
+                status=story.status or "",
+                backend=_BACKEND,
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_story_create_failed",
+                extra={"title": title, "error": str(exc)},
+            )
+            return StoryResult(
+                id="", title=title, world_id=world_id,
+                backend=_BACKEND, error=str(exc),
+            )

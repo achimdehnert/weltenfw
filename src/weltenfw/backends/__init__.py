@@ -16,6 +16,8 @@ from weltenfw.backends.base import (
     LocationResult,
     ScenePage,
     SceneResult,
+    StoryPage,
+    StoryResult,
     WorldPage,
     WorldResult,
 )
@@ -31,5 +33,7 @@ __all__ = [
     "LocationPage",
     "SceneResult",
     "ScenePage",
+    "StoryResult",
+    "StoryPage",
     "WeltenhubBackend",
 ]
