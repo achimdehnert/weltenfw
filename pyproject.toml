@@ -1,6 +1,6 @@
 [project]
 name = "iil-weltenfw"
-version = "0.3.0"
+version = "0.4.0"
 description = "WeltenHub Client Framework — typed REST client and Pydantic schemas for the WeltenHub Story Universe API"
 readme = "README.md"
 requires-python = ">=3.11"

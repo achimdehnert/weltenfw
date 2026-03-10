@@ -36,10 +36,10 @@ from weltenfw.backends.base import (
 )
 from weltenfw.client import WeltenClient
 from weltenfw.exceptions import WeltenError
-from weltenfw.schema.character import CharacterCreateInput
-from weltenfw.schema.location import LocationCreateInput
-from weltenfw.schema.scene import SceneCreateInput
-from weltenfw.schema.story import StoryCreateInput
+from weltenfw.schema.character import CharacterCreateInput, CharacterUpdateInput
+from weltenfw.schema.location import LocationCreateInput, LocationUpdateInput
+from weltenfw.schema.scene import SceneCreateInput, SceneUpdateInput
+from weltenfw.schema.story import StoryCreateInput, StoryUpdateInput
 from weltenfw.schema.tenant import ProvisionRequest
 from weltenfw.schema.world import WorldCreateInput, WorldUpdateInput
 
@@ -327,6 +327,51 @@ class WeltenhubBackend:
             )
             return CharacterPage()
 
+    def update_character(
+        self, character_id: str, **fields: object
+    ) -> CharacterResult:
+        """Partial-update a character."""
+        try:
+            with self._client() as client:
+                char = client.characters.partial_update(
+                    UUID(character_id),
+                    CharacterUpdateInput(**{
+                        k: v for k, v in fields.items()
+                        if k in CharacterUpdateInput.model_fields
+                    }),
+                )
+            return CharacterResult(
+                id=str(char.id),
+                name=char.name,
+                world_id=str(char.world),
+                personality=char.personality or "",
+                backend=_BACKEND,
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_character_update_failed",
+                extra={"character_id": character_id, "error": str(exc)},
+            )
+            return CharacterResult(
+                id=character_id, name="",
+                backend=_BACKEND, error=str(exc),
+            )
+
+    def delete_character(self, character_id: str) -> None:
+        """Delete a character by its canonical ID."""
+        try:
+            with self._client() as client:
+                client.characters.delete(UUID(character_id))
+            logger.info(
+                "weltenhub_character_deleted",
+                extra={"character_id": character_id},
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_character_delete_failed",
+                extra={"character_id": character_id, "error": str(exc)},
+            )
+
     # ------------------------------------------------------------------
     # Location operations
     # ------------------------------------------------------------------
@@ -546,4 +591,215 @@ class WeltenhubBackend:
             return StoryResult(
                 id="", title=title, world_id=world_id,
                 backend=_BACKEND, error=str(exc),
+            )
+
+    def get_story(self, story_id: str) -> StoryResult:
+        """Fetch a story by its canonical ID."""
+        try:
+            with self._client() as client:
+                story = client.stories.get(UUID(story_id))
+            return StoryResult(
+                id=str(story.id),
+                title=story.title,
+                world_id=str(story.world),
+                genre_name=story.genre_name or "",
+                status=story.status or "",
+                synopsis=story.synopsis or "",
+                backend=_BACKEND,
+            )
+        except WeltenError as exc:
+            return StoryResult(
+                id=story_id, title="",
+                backend=_BACKEND, error=str(exc),
+            )
+
+    def update_story(
+        self, story_id: str, **fields: object
+    ) -> StoryResult:
+        """Partial-update a story."""
+        try:
+            with self._client() as client:
+                story = client.stories.partial_update(
+                    UUID(story_id),
+                    StoryUpdateInput(**{
+                        k: v for k, v in fields.items()
+                        if k in StoryUpdateInput.model_fields
+                    }),
+                )
+            return StoryResult(
+                id=str(story.id),
+                title=story.title,
+                world_id=str(story.world),
+                genre_name=story.genre_name or "",
+                status=story.status or "",
+                backend=_BACKEND,
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_story_update_failed",
+                extra={"story_id": story_id, "error": str(exc)},
+            )
+            return StoryResult(
+                id=story_id, title="",
+                backend=_BACKEND, error=str(exc),
+            )
+
+    def delete_story(self, story_id: str) -> None:
+        """Delete a story by its canonical ID."""
+        try:
+            with self._client() as client:
+                client.stories.delete(UUID(story_id))
+            logger.info(
+                "weltenhub_story_deleted",
+                extra={"story_id": story_id},
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_story_delete_failed",
+                extra={"story_id": story_id, "error": str(exc)},
+            )
+
+    def get_location(self, location_id: str) -> LocationResult:
+        """Fetch a location by its canonical ID."""
+        try:
+            with self._client() as client:
+                loc = client.locations.get(UUID(location_id))
+            return LocationResult(
+                id=str(loc.id),
+                name=loc.name,
+                world_id=str(loc.world),
+                parent_id=str(loc.parent) if loc.parent else None,
+                location_type_name=loc.location_type_name or "",
+                description=loc.description or "",
+                full_path=loc.full_path or "",
+                backend=_BACKEND,
+            )
+        except WeltenError as exc:
+            return LocationResult(
+                id=location_id, name="",
+                backend=_BACKEND, error=str(exc),
+            )
+
+    def update_location(
+        self, location_id: str, **fields: object
+    ) -> LocationResult:
+        """Partial-update a location."""
+        try:
+            with self._client() as client:
+                loc = client.locations.partial_update(
+                    UUID(location_id),
+                    LocationUpdateInput(**{
+                        k: v for k, v in fields.items()
+                        if k in LocationUpdateInput.model_fields
+                    }),
+                )
+            return LocationResult(
+                id=str(loc.id),
+                name=loc.name,
+                world_id=str(loc.world),
+                full_path=loc.full_path or "",
+                backend=_BACKEND,
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_location_update_failed",
+                extra={"location_id": location_id, "error": str(exc)},
+            )
+            return LocationResult(
+                id=location_id, name="",
+                backend=_BACKEND, error=str(exc),
+            )
+
+    def delete_location(self, location_id: str) -> None:
+        """Delete a location by its canonical ID."""
+        try:
+            with self._client() as client:
+                client.locations.delete(UUID(location_id))
+            logger.info(
+                "weltenhub_location_deleted",
+                extra={"location_id": location_id},
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_location_delete_failed",
+                extra={"location_id": location_id, "error": str(exc)},
+            )
+
+    def get_scene(self, scene_id: str) -> SceneResult:
+        """Fetch a scene by its canonical ID."""
+        try:
+            with self._client() as client:
+                scene = client.scenes.get(UUID(scene_id))
+            return SceneResult(
+                id=str(scene.id),
+                title=scene.title,
+                story_id=str(scene.story),
+                location_name=scene.location_name or "",
+                order=scene.order,
+                backend=_BACKEND,
+            )
+        except WeltenError as exc:
+            return SceneResult(
+                id=scene_id, title="",
+                backend=_BACKEND, error=str(exc),
+            )
+
+    def update_scene(
+        self, scene_id: str, **fields: object
+    ) -> SceneResult:
+        """Partial-update a scene."""
+        try:
+            with self._client() as client:
+                scene = client.scenes.partial_update(
+                    UUID(scene_id),
+                    SceneUpdateInput(**{
+                        k: v for k, v in fields.items()
+                        if k in SceneUpdateInput.model_fields
+                    }),
+                )
+            return SceneResult(
+                id=str(scene.id),
+                title=scene.title,
+                story_id=str(scene.story),
+                order=scene.order,
+                backend=_BACKEND,
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_scene_update_failed",
+                extra={"scene_id": scene_id, "error": str(exc)},
+            )
+            return SceneResult(
+                id=scene_id, title="",
+                backend=_BACKEND, error=str(exc),
+            )
+
+    def delete_scene(self, scene_id: str) -> None:
+        """Delete a scene by its canonical ID."""
+        try:
+            with self._client() as client:
+                client.scenes.delete(UUID(scene_id))
+            logger.info(
+                "weltenhub_scene_deleted",
+                extra={"scene_id": scene_id},
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_scene_delete_failed",
+                extra={"scene_id": scene_id, "error": str(exc)},
+            )
+
+    def delete_world(self, world_id: str) -> None:
+        """Delete a world by its canonical ID."""
+        try:
+            with self._client() as client:
+                client.worlds.delete(UUID(world_id))
+            logger.info(
+                "weltenhub_world_deleted",
+                extra={"world_id": world_id},
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_world_delete_failed",
+                extra={"world_id": world_id, "error": str(exc)},
             )

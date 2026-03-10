@@ -204,6 +204,128 @@ class AbstractWorldBackend(Protocol):
         """List characters belonging to the given world."""
         ...
 
+    def update_character(
+        self,
+        character_id: str,
+        **fields: object,
+    ) -> CharacterResult:
+        """Partial-update a character."""
+        ...
+
+    def delete_character(self, character_id: str) -> None:
+        """Delete a character by its canonical ID."""
+        ...
+
+    # ------------------------------------------------------------------
+    # Location operations
+    # ------------------------------------------------------------------
+
+    def get_location(self, location_id: str) -> LocationResult:
+        """Fetch a location by its canonical ID."""
+        ...
+
+    def list_locations(
+        self, world_id: str, page: int = 1, page_size: int = 100
+    ) -> LocationPage:
+        """List locations belonging to the given world."""
+        ...
+
+    def create_location(
+        self,
+        world_id: str,
+        name: str,
+        description: str = "",
+        parent_id: str | None = None,
+        **kwargs: object,
+    ) -> LocationResult:
+        """Create a location in the given world."""
+        ...
+
+    def update_location(
+        self,
+        location_id: str,
+        **fields: object,
+    ) -> LocationResult:
+        """Partial-update a location."""
+        ...
+
+    def delete_location(self, location_id: str) -> None:
+        """Delete a location by its canonical ID."""
+        ...
+
+    # ------------------------------------------------------------------
+    # Story operations
+    # ------------------------------------------------------------------
+
+    def get_story(self, story_id: str) -> StoryResult:
+        """Fetch a story by its canonical ID."""
+        ...
+
+    def list_stories(
+        self, world_id: str, page: int = 1, page_size: int = 100
+    ) -> StoryPage:
+        """List stories belonging to the given world."""
+        ...
+
+    def create_story(
+        self,
+        world_id: str,
+        title: str,
+        synopsis: str = "",
+        **kwargs: object,
+    ) -> StoryResult:
+        """Create a story in the given world."""
+        ...
+
+    def update_story(
+        self,
+        story_id: str,
+        **fields: object,
+    ) -> StoryResult:
+        """Partial-update a story."""
+        ...
+
+    def delete_story(self, story_id: str) -> None:
+        """Delete a story by its canonical ID."""
+        ...
+
+    # ------------------------------------------------------------------
+    # Scene operations
+    # ------------------------------------------------------------------
+
+    def get_scene(self, scene_id: str) -> SceneResult:
+        """Fetch a scene by its canonical ID."""
+        ...
+
+    def list_scenes(
+        self, story_id: str, page: int = 1, page_size: int = 100
+    ) -> ScenePage:
+        """List scenes belonging to the given story."""
+        ...
+
+    def create_scene(
+        self,
+        story_id: str,
+        title: str,
+        summary: str = "",
+        order: int = 0,
+        **kwargs: object,
+    ) -> SceneResult:
+        """Create a scene in the given story."""
+        ...
+
+    def update_scene(
+        self,
+        scene_id: str,
+        **fields: object,
+    ) -> SceneResult:
+        """Partial-update a scene."""
+        ...
+
+    def delete_scene(self, scene_id: str) -> None:
+        """Delete a scene by its canonical ID."""
+        ...
+
     # ------------------------------------------------------------------
     # User provisioning (idempotent)
     # ------------------------------------------------------------------
