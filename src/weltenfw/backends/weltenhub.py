@@ -25,6 +25,10 @@ from uuid import UUID
 from weltenfw.backends.base import (
     CharacterPage,
     CharacterResult,
+    LocationPage,
+    LocationResult,
+    ScenePage,
+    SceneResult,
     WorldPage,
     WorldResult,
 )
@@ -317,3 +321,70 @@ class WeltenhubBackend:
                 extra={"world_id": world_id, "error": str(exc)},
             )
             return CharacterPage()
+
+    # ------------------------------------------------------------------
+    # Location operations
+    # ------------------------------------------------------------------
+
+    def list_locations(
+        self, world_id: str, page: int = 1, page_size: int = 100
+    ) -> LocationPage:
+        try:
+            with self._client() as client:
+                page_result = client.locations.list(
+                    page=page, world=world_id, page_size=page_size
+                )
+            return LocationPage(
+                results=[
+                    LocationResult(
+                        id=str(loc.id),
+                        name=loc.name,
+                        world_id=world_id,
+                        parent_id=str(loc.parent) if loc.parent else None,
+                        location_type_name=loc.location_type_name or "",
+                        full_path=loc.full_path or "",
+                        backend=_BACKEND,
+                    )
+                    for loc in page_result.results
+                ],
+                count=page_result.count,
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_list_locations_failed",
+                extra={"world_id": world_id, "error": str(exc)},
+            )
+            return LocationPage()
+
+    # ------------------------------------------------------------------
+    # Scene operations
+    # ------------------------------------------------------------------
+
+    def list_scenes(
+        self, story_id: str, page: int = 1, page_size: int = 100
+    ) -> ScenePage:
+        try:
+            with self._client() as client:
+                page_result = client.scenes.list(
+                    page=page, story=story_id, page_size=page_size
+                )
+            return ScenePage(
+                results=[
+                    SceneResult(
+                        id=str(s.id),
+                        title=s.title,
+                        story_id=story_id,
+                        location_name=s.location_name or "",
+                        order=s.order,
+                        backend=_BACKEND,
+                    )
+                    for s in page_result.results
+                ],
+                count=page_result.count,
+            )
+        except WeltenError as exc:
+            logger.warning(
+                "weltenhub_list_scenes_failed",
+                extra={"story_id": story_id, "error": str(exc)},
+            )
+            return ScenePage()

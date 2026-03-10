@@ -47,6 +47,43 @@ class CharacterResult:
 
 
 @dataclass(frozen=True)
+class LocationResult:
+    """Returned by AbstractWorldBackend.list_locations / get_location."""
+
+    id: str
+    name: str
+    world_id: str = ""
+    parent_id: str | None = None
+    location_type_name: str = ""
+    description: str = ""
+    full_path: str = ""
+    backend: str = "unknown"
+    error: str | None = None
+
+    @property
+    def ok(self) -> bool:
+        return self.error is None
+
+
+@dataclass(frozen=True)
+class SceneResult:
+    """Returned by AbstractWorldBackend.list_scenes / get_scene."""
+
+    id: str
+    title: str
+    story_id: str = ""
+    summary: str = ""
+    location_name: str = ""
+    order: int = 0
+    backend: str = "unknown"
+    error: str | None = None
+
+    @property
+    def ok(self) -> bool:
+        return self.error is None
+
+
+@dataclass(frozen=True)
 class WorldPage:
     """Paginated list of worlds."""
 
@@ -59,6 +96,22 @@ class CharacterPage:
     """Paginated list of characters."""
 
     results: list[CharacterResult] = field(default_factory=list)
+    count: int = 0
+
+
+@dataclass(frozen=True)
+class LocationPage:
+    """Paginated list of locations."""
+
+    results: list[LocationResult] = field(default_factory=list)
+    count: int = 0
+
+
+@dataclass(frozen=True)
+class ScenePage:
+    """Paginated list of scenes."""
+
+    results: list[SceneResult] = field(default_factory=list)
     count: int = 0
 
 

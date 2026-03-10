@@ -8,12 +8,28 @@ Konfigurierbare Backends für Welt/Charakter-Operationen:
 Auswahl via WORLD_STORAGE_BACKEND in Django-Settings (optional).
 """
 
-from weltenfw.backends.base import AbstractWorldBackend, CharacterResult, WorldResult
+from weltenfw.backends.base import (
+    AbstractWorldBackend,
+    CharacterPage,
+    CharacterResult,
+    LocationPage,
+    LocationResult,
+    ScenePage,
+    SceneResult,
+    WorldPage,
+    WorldResult,
+)
 from weltenfw.backends.weltenhub import WeltenhubBackend
 
 __all__ = [
     "AbstractWorldBackend",
     "WorldResult",
+    "WorldPage",
     "CharacterResult",
+    "CharacterPage",
+    "LocationResult",
+    "LocationPage",
+    "SceneResult",
+    "ScenePage",
     "WeltenhubBackend",
 ]
