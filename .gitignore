@@ -12,3 +12,6 @@ venv/
 .ruff_cache/
 .mypy_cache/
 env_loader.py
+
+# IDE agent workflows (symlinked, not repo-specific)
+.windsurf/
