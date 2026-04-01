@@ -1,8 +1,1 @@
----
-description: Platform governance
----
-
-# Governance Check
-
-- ❌ `import anthropic`/`openai` → ✅ `iil-aifw`
-- ❌ Hardcoded secrets → ✅ env vars
+/home/dehnert/github/platform/.windsurf/workflows/governance-check.md
