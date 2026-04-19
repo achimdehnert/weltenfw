@@ -1,6 +1,6 @@
 [project]
 name = "iil-weltenfw"
-version = "0.4.0"
+version = "0.4.1"
 description = "WeltenHub Client Framework — typed REST client and Pydantic schemas for the WeltenHub Story Universe API"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -33,14 +33,14 @@ http2 = [
     "httpx[http2]>=0.27,<1",
 ]
 django = [
-    "django>=5.0,<6",
+    "django>=5.0",
 ]
 authoring = [
     "iil-authoringfw>=0.3,<1",
 ]
 all = [
     "httpx[http2]>=0.27,<1",
-    "django>=5.0,<6",
+    "django>=5.0",
     "iil-authoringfw>=0.3,<1",
 ]
 dev = [
