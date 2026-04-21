@@ -3,7 +3,7 @@ name = "iil-weltenfw"
 version = "0.4.1"
 description = "WeltenHub Client Framework — typed REST client and Pydantic schemas for the WeltenHub Story Universe API"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = {text = "MIT"}
 authors = [
     {name = "Achim Dehnert", email = "achim@dehnert.com"}
