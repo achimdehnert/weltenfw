@@ -1,4 +1,4 @@
-# weltenfw — v0.3.0
+# weltenfw — v0.4.1
 
 **WeltenHub Client Framework** — typed REST client, Pydantic v2 schemas,
 and a pluggable storage-backend pattern for the

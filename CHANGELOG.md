@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.4.1] — 2026-04-23
+
+- chore: sync .windsurf rules (typechange symlink→file)
+- chore: requires-python >= 3.12
+- chore: add MIT LICENSE
+- fix: relax Django upper bound — remove <6 constraint (platform#30)
+- feat: add py.typed marker (PEP 561, ADR-155)
+- chore: add .windsurf/ to .gitignore (platform-audit fix)
+- feat(backends): v0.4.0 — vollständige CRUD für alle Domains
+- feat(backends): v0.3.0 — vollständiges Location/Scene/Story Backend + Docs
+- feat(backends): v0.3.0 — list_locations() + list_scenes() in WeltenhubBackend
+- docs: backends/ README + weltenfw README v0.2.0 Storage Backend Pattern
+
+
 All notable changes to `weltenfw` are documented here.
 
 Format: [Semantic Versioning](https://semver.org/).
