@@ -1,22 +1,30 @@
 # Changelog
 
+All notable changes to `weltenfw` are documented here.
+Format: [Semantic Versioning](https://semver.org/).
+
+---
+
 ## [0.4.1] — 2026-04-23
 
-- chore: sync .windsurf rules (typechange symlink→file)
-- chore: requires-python >= 3.12
-- chore: add MIT LICENSE
-- fix: relax Django upper bound — remove <6 constraint (platform#30)
-- feat: add py.typed marker (PEP 561, ADR-155)
-- chore: add .windsurf/ to .gitignore (platform-audit fix)
-- feat(backends): v0.4.0 — vollständige CRUD für alle Domains
-- feat(backends): v0.3.0 — vollständiges Location/Scene/Story Backend + Docs
-- feat(backends): v0.3.0 — list_locations() + list_scenes() in WeltenhubBackend
-- docs: backends/ README + weltenfw README v0.2.0 Storage Backend Pattern
+### Changed
+- `requires-python = ">=3.12"` — aligns with platform standard
+- Django upper bound `<6` removed (platform#30)
+- `.windsurf/` excluded from builds (`.gitignore` fix)
 
+### Added
+- `py.typed` marker (PEP 561, ADR-155)
+- MIT LICENSE file
 
-All notable changes to `weltenfw` are documented here.
+---
 
-Format: [Semantic Versioning](https://semver.org/).
+## [0.4.0]
+
+### Added
+- Complete CRUD for all domains: Worlds, Characters, Locations, Stories, Scenes
+- `WeltenhubBackend`: all write/read methods for full Story Universe management
+
+---
 
 ## [0.3.0] — 2026-03-10
 
@@ -78,45 +86,22 @@ Pilot consumer: `travel-beat` (DriftTales).
 - Sprint 2: Domain-Schemas
   - `schema/lookups.py`: 9 Lookup-Schemas (Genre, Mood, ConflictLevel,
     LocationType, SceneType, CharacterRole, TransportType, SceneStatus, BeatType)
-  - `schema/tenant.py`: TenantSchema, ProvisionRequest, ProvisionResponse
-  - `schema/world.py`: WorldSchema, WorldListSchema, WorldRuleSchema,
-    WorldCreateInput, WorldUpdateInput
-  - `schema/character.py`: CharacterSchema, CharacterListSchema, CharacterArcSchema,
-    CharacterRelationshipSchema, CharacterCreateInput, CharacterUpdateInput
-  - `schema/scene.py`: SceneSchema, SceneListSchema, SceneBeatSchema,
-    SceneConnectionSchema, SceneCreateInput, SceneUpdateInput
-  - `schema/story.py`: StorySchema, StoryListSchema, ChapterSchema,
-    PlotThreadSchema, TimelineEventSchema, StoryCreateInput, StoryUpdateInput
-  - `schema/location.py`: LocationSchema, LocationListSchema,
-    LocationCreateInput, LocationUpdateInput
+  - `schema/world.py`, `schema/character.py`, `schema/scene.py`,
+    `schema/story.py`, `schema/location.py`: typed Pydantic v2 schemas
 
 - Sprint 3: Resources + WeltenClient
-  - `resources/base.py`: BaseResource (CRUD: list/get/create/update/partial_update/delete/iter_all
-    + async equivalents). All write methods use `model_dump(mode='json')` for
-    correct UUID/datetime serialization.
-  - `resources/worlds.py`: WorldResource (+ rules())
-  - `resources/characters.py`: CharacterResource (+ arcs(), relationships())
-  - `resources/scenes.py`: SceneResource (+ beats())
-  - `resources/stories.py`: StoryResource
-  - `resources/locations.py`: LocationResource
-  - `resources/lookups.py`: LookupResource (read-only, CacheBackend)
-  - `resources/tenants.py`: TenantResource (+ provision())
-  - `client.py`: WeltenClient (sync + async, context manager,
-    lookup_cache + lookup_ttl params)
+  - `resources/base.py`: BaseResource (full CRUD sync + async)
+  - `resources/worlds.py`, `characters.py`, `scenes.py`, `stories.py`,
+    `locations.py`, `lookups.py`, `tenants.py`
+  - `client.py`: WeltenClient (sync + async, context manager)
 
 - Sprint 4: Django-Integration + travel-beat Pilot
-  - `django/app_config.py`: WeltenfwConfig, get_client() (lazy, per Worker)
-  - `django/__init__.py`: Public API (get_client, reset_client)
-  - travel-beat integration: `weltenfw_adapter.py` — get_service_client,
-    get_user_client, provision_user, get_or_create_world,
-    get_or_create_character, get_or_create_location, create_story
+  - `django/app_config.py`: WeltenfwConfig, `get_client()` (lazy, per Worker)
+  - travel-beat integration adapter
 
 ### Fixed
 
 - `resources/base.py`: `model_dump()` → `model_dump(mode='json')` in all
-  write methods (create, update, partial_update and async equivalents).
-  UUID and datetime objects were not serialized to strings, causing
-  `TypeError: Object of type UUID is not JSON serializable` when passing
-  inputs like `SceneCreateInput(story=UUID(...))` to httpx.
+  write methods — fixes `TypeError: Object of type UUID is not JSON serializable`
 
 [0.1.0]: https://github.com/achimdehnert/weltenfw/releases/tag/v0.1.0
