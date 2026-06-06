@@ -224,9 +224,7 @@ class AbstractWorldBackend(Protocol):
         """Fetch a location by its canonical ID."""
         ...
 
-    def list_locations(
-        self, world_id: str, page: int = 1, page_size: int = 100
-    ) -> LocationPage:
+    def list_locations(self, world_id: str, page: int = 1, page_size: int = 100) -> LocationPage:
         """List locations belonging to the given world."""
         ...
 
@@ -261,9 +259,7 @@ class AbstractWorldBackend(Protocol):
         """Fetch a story by its canonical ID."""
         ...
 
-    def list_stories(
-        self, world_id: str, page: int = 1, page_size: int = 100
-    ) -> StoryPage:
+    def list_stories(self, world_id: str, page: int = 1, page_size: int = 100) -> StoryPage:
         """List stories belonging to the given world."""
         ...
 
@@ -297,9 +293,7 @@ class AbstractWorldBackend(Protocol):
         """Fetch a scene by its canonical ID."""
         ...
 
-    def list_scenes(
-        self, story_id: str, page: int = 1, page_size: int = 100
-    ) -> ScenePage:
+    def list_scenes(self, story_id: str, page: int = 1, page_size: int = 100) -> ScenePage:
         """List scenes belonging to the given story."""
         ...
 

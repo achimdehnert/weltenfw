@@ -18,8 +18,7 @@ class WeltenError(Exception):
 
     def __repr__(self) -> str:
         return (
-            f"{self.__class__.__name__}"
-            f"(status_code={self.status_code!r}, message={self.message!r})"
+            f"{self.__class__.__name__}(status_code={self.status_code!r}, message={self.message!r})"
         )
 
 

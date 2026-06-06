@@ -105,9 +105,7 @@ class WeltenhubBackend:
                 timeout=timeout,
             )
             with client:
-                resp = client.tenants.provision(
-                    ProvisionRequest(username=username, email=email)
-                )
+                resp = client.tenants.provision(ProvisionRequest(username=username, email=email))
             logger.info(
                 "weltenhub_user_provisioned",
                 extra={"username": username, "created": resp.created},
@@ -187,9 +185,7 @@ class WeltenhubBackend:
                 backend=_BACKEND,
             )
         except WeltenError as exc:
-            return WorldResult(
-                id=world_id, name="", backend=_BACKEND, error=str(exc)
-            )
+            return WorldResult(id=world_id, name="", backend=_BACKEND, error=str(exc))
 
     def list_worlds(self, search: str = "", page: int = 1) -> WorldPage:
         try:
@@ -225,9 +221,7 @@ class WeltenhubBackend:
                 backend=_BACKEND,
             )
         except WeltenError as exc:
-            return WorldResult(
-                id=world_id, name="", backend=_BACKEND, error=str(exc)
-            )
+            return WorldResult(id=world_id, name="", backend=_BACKEND, error=str(exc))
 
     # ------------------------------------------------------------------
     # Character operations
@@ -299,9 +293,7 @@ class WeltenhubBackend:
                 backend=_BACKEND,
             )
         except WeltenError as exc:
-            return CharacterResult(
-                id=character_id, name="", backend=_BACKEND, error=str(exc)
-            )
+            return CharacterResult(id=character_id, name="", backend=_BACKEND, error=str(exc))
 
     def list_characters(self, world_id: str, page: int = 1) -> CharacterPage:
         try:
@@ -327,18 +319,19 @@ class WeltenhubBackend:
             )
             return CharacterPage()
 
-    def update_character(
-        self, character_id: str, **fields: object
-    ) -> CharacterResult:
+    def update_character(self, character_id: str, **fields: object) -> CharacterResult:
         """Partial-update a character."""
         try:
             with self._client() as client:
                 char = client.characters.partial_update(
                     UUID(character_id),
-                    CharacterUpdateInput(**{
-                        k: v for k, v in fields.items()
-                        if k in CharacterUpdateInput.model_fields
-                    }),
+                    CharacterUpdateInput(
+                        **{
+                            k: v
+                            for k, v in fields.items()
+                            if k in CharacterUpdateInput.model_fields
+                        }
+                    ),
                 )
             return CharacterResult(
                 id=str(char.id),
@@ -353,8 +346,10 @@ class WeltenhubBackend:
                 extra={"character_id": character_id, "error": str(exc)},
             )
             return CharacterResult(
-                id=character_id, name="",
-                backend=_BACKEND, error=str(exc),
+                id=character_id,
+                name="",
+                backend=_BACKEND,
+                error=str(exc),
             )
 
     def delete_character(self, character_id: str) -> None:
@@ -376,14 +371,10 @@ class WeltenhubBackend:
     # Location operations
     # ------------------------------------------------------------------
 
-    def list_locations(
-        self, world_id: str, page: int = 1, page_size: int = 100
-    ) -> LocationPage:
+    def list_locations(self, world_id: str, page: int = 1, page_size: int = 100) -> LocationPage:
         try:
             with self._client() as client:
-                page_result = client.locations.list(
-                    page=page, world=world_id, page_size=page_size
-                )
+                page_result = client.locations.list(page=page, world=world_id, page_size=page_size)
             return LocationPage(
                 results=[
                     LocationResult(
@@ -410,14 +401,10 @@ class WeltenhubBackend:
     # Scene operations
     # ------------------------------------------------------------------
 
-    def list_scenes(
-        self, story_id: str, page: int = 1, page_size: int = 100
-    ) -> ScenePage:
+    def list_scenes(self, story_id: str, page: int = 1, page_size: int = 100) -> ScenePage:
         try:
             with self._client() as client:
-                page_result = client.scenes.list(
-                    page=page, story=story_id, page_size=page_size
-                )
+                page_result = client.scenes.list(page=page, story=story_id, page_size=page_size)
             return ScenePage(
                 results=[
                     SceneResult(
@@ -475,8 +462,11 @@ class WeltenhubBackend:
                 extra={"title": title, "error": str(exc)},
             )
             return SceneResult(
-                id="", title=title, story_id=story_id,
-                backend=_BACKEND, error=str(exc),
+                id="",
+                title=title,
+                story_id=story_id,
+                backend=_BACKEND,
+                error=str(exc),
             )
 
     def create_location(
@@ -516,23 +506,22 @@ class WeltenhubBackend:
                 extra={"name": name, "error": str(exc)},
             )
             return LocationResult(
-                id="", name=name, world_id=world_id,
-                backend=_BACKEND, error=str(exc),
+                id="",
+                name=name,
+                world_id=world_id,
+                backend=_BACKEND,
+                error=str(exc),
             )
 
     # ------------------------------------------------------------------
     # Story operations
     # ------------------------------------------------------------------
 
-    def list_stories(
-        self, world_id: str, page: int = 1, page_size: int = 100
-    ) -> StoryPage:
+    def list_stories(self, world_id: str, page: int = 1, page_size: int = 100) -> StoryPage:
         """List stories belonging to the given world."""
         try:
             with self._client() as client:
-                page_result = client.stories.list(
-                    page=page, world=world_id, page_size=page_size
-                )
+                page_result = client.stories.list(page=page, world=world_id, page_size=page_size)
             return StoryPage(
                 results=[
                     StoryResult(
@@ -589,8 +578,11 @@ class WeltenhubBackend:
                 extra={"title": title, "error": str(exc)},
             )
             return StoryResult(
-                id="", title=title, world_id=world_id,
-                backend=_BACKEND, error=str(exc),
+                id="",
+                title=title,
+                world_id=world_id,
+                backend=_BACKEND,
+                error=str(exc),
             )
 
     def get_story(self, story_id: str) -> StoryResult:
@@ -609,22 +601,21 @@ class WeltenhubBackend:
             )
         except WeltenError as exc:
             return StoryResult(
-                id=story_id, title="",
-                backend=_BACKEND, error=str(exc),
+                id=story_id,
+                title="",
+                backend=_BACKEND,
+                error=str(exc),
             )
 
-    def update_story(
-        self, story_id: str, **fields: object
-    ) -> StoryResult:
+    def update_story(self, story_id: str, **fields: object) -> StoryResult:
         """Partial-update a story."""
         try:
             with self._client() as client:
                 story = client.stories.partial_update(
                     UUID(story_id),
-                    StoryUpdateInput(**{
-                        k: v for k, v in fields.items()
-                        if k in StoryUpdateInput.model_fields
-                    }),
+                    StoryUpdateInput(
+                        **{k: v for k, v in fields.items() if k in StoryUpdateInput.model_fields}
+                    ),
                 )
             return StoryResult(
                 id=str(story.id),
@@ -640,8 +631,10 @@ class WeltenhubBackend:
                 extra={"story_id": story_id, "error": str(exc)},
             )
             return StoryResult(
-                id=story_id, title="",
-                backend=_BACKEND, error=str(exc),
+                id=story_id,
+                title="",
+                backend=_BACKEND,
+                error=str(exc),
             )
 
     def delete_story(self, story_id: str) -> None:
@@ -676,22 +669,21 @@ class WeltenhubBackend:
             )
         except WeltenError as exc:
             return LocationResult(
-                id=location_id, name="",
-                backend=_BACKEND, error=str(exc),
+                id=location_id,
+                name="",
+                backend=_BACKEND,
+                error=str(exc),
             )
 
-    def update_location(
-        self, location_id: str, **fields: object
-    ) -> LocationResult:
+    def update_location(self, location_id: str, **fields: object) -> LocationResult:
         """Partial-update a location."""
         try:
             with self._client() as client:
                 loc = client.locations.partial_update(
                     UUID(location_id),
-                    LocationUpdateInput(**{
-                        k: v for k, v in fields.items()
-                        if k in LocationUpdateInput.model_fields
-                    }),
+                    LocationUpdateInput(
+                        **{k: v for k, v in fields.items() if k in LocationUpdateInput.model_fields}
+                    ),
                 )
             return LocationResult(
                 id=str(loc.id),
@@ -706,8 +698,10 @@ class WeltenhubBackend:
                 extra={"location_id": location_id, "error": str(exc)},
             )
             return LocationResult(
-                id=location_id, name="",
-                backend=_BACKEND, error=str(exc),
+                id=location_id,
+                name="",
+                backend=_BACKEND,
+                error=str(exc),
             )
 
     def delete_location(self, location_id: str) -> None:
@@ -740,22 +734,21 @@ class WeltenhubBackend:
             )
         except WeltenError as exc:
             return SceneResult(
-                id=scene_id, title="",
-                backend=_BACKEND, error=str(exc),
+                id=scene_id,
+                title="",
+                backend=_BACKEND,
+                error=str(exc),
             )
 
-    def update_scene(
-        self, scene_id: str, **fields: object
-    ) -> SceneResult:
+    def update_scene(self, scene_id: str, **fields: object) -> SceneResult:
         """Partial-update a scene."""
         try:
             with self._client() as client:
                 scene = client.scenes.partial_update(
                     UUID(scene_id),
-                    SceneUpdateInput(**{
-                        k: v for k, v in fields.items()
-                        if k in SceneUpdateInput.model_fields
-                    }),
+                    SceneUpdateInput(
+                        **{k: v for k, v in fields.items() if k in SceneUpdateInput.model_fields}
+                    ),
                 )
             return SceneResult(
                 id=str(scene.id),
@@ -770,8 +763,10 @@ class WeltenhubBackend:
                 extra={"scene_id": scene_id, "error": str(exc)},
             )
             return SceneResult(
-                id=scene_id, title="",
-                backend=_BACKEND, error=str(exc),
+                id=scene_id,
+                title="",
+                backend=_BACKEND,
+                error=str(exc),
             )
 
     def delete_scene(self, scene_id: str) -> None:
