@@ -2,8 +2,6 @@
 Tests fuer weltenfw.cache
 """
 
-import pytest
-
 from weltenfw.cache import CacheBackend, MemoryCache, NullCache
 
 
