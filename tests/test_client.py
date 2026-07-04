@@ -4,20 +4,18 @@ Tests fuer weltenfw.client - WeltenClient
 
 from __future__ import annotations
 
-import pytest
+from datetime import UTC, datetime
+from uuid import uuid4
+
 import httpx
 import respx
-from uuid import uuid4
-from datetime import datetime, timezone
 
-from weltenfw.client import WeltenClient
 from weltenfw.cache import MemoryCache, NullCache
+from weltenfw.client import WeltenClient
 from weltenfw.schema.world import WorldSchema
-from weltenfw.schema.tenant import ProvisionResponse
-
 
 BASE_URL = "https://test.weltenforger.com/api/v1"
-NOW = datetime(2026, 3, 1, 12, 0, 0, tzinfo=timezone.utc).isoformat()
+NOW = datetime(2026, 3, 1, 12, 0, 0, tzinfo=UTC).isoformat()
 
 
 def _world_data(name: str = "Arandur") -> dict:
@@ -48,9 +46,7 @@ def test_should_client_list_worlds() -> None:
 def test_should_client_get_world() -> None:
     world = _world_data("Midgard")
     pk = world["id"]
-    respx.get(f"{BASE_URL}/worlds/{pk}/").mock(
-        return_value=httpx.Response(200, json=world)
-    )
+    respx.get(f"{BASE_URL}/worlds/{pk}/").mock(return_value=httpx.Response(200, json=world))
     with WeltenClient(base_url=BASE_URL, token="tok") as client:
         w = client.worlds.get(pk)
     assert w.name == "Midgard"
@@ -63,7 +59,9 @@ def test_should_client_iter_all_worlds() -> None:
     world2 = _world_data("W2")
     respx.get(f"{BASE_URL}/worlds/").mock(
         side_effect=[
-            httpx.Response(200, json={"count": 2, "next": f"{BASE_URL}/worlds/?page=2", "results": [world1]}),
+            httpx.Response(
+                200, json={"count": 2, "next": f"{BASE_URL}/worlds/?page=2", "results": [world1]}
+            ),
             httpx.Response(200, json={"count": 2, "next": None, "results": [world2]}),
         ]
     )
@@ -78,15 +76,19 @@ def test_should_client_iter_all_worlds() -> None:
 def test_should_client_provision_tenant() -> None:
     tenant_id = str(uuid4())
     respx.post(f"{BASE_URL}/tenants/provision/user/").mock(
-        return_value=httpx.Response(201, json={
-            "token": "newtoken123",
-            "user_id": 99,
-            "tenant_id": tenant_id,
-            "tenant_slug": "dt-max",
-            "created": True,
-        })
+        return_value=httpx.Response(
+            201,
+            json={
+                "token": "newtoken123",
+                "user_id": 99,
+                "tenant_id": tenant_id,
+                "tenant_slug": "dt-max",
+                "created": True,
+            },
+        )
     )
     from weltenfw.schema.tenant import ProvisionRequest
+
     with WeltenClient(base_url=BASE_URL, token="servicetoken") as client:
         resp = client.tenants.provision(ProvisionRequest(username="max", email="max@example.com"))
     assert resp.token == "newtoken123"
@@ -109,9 +111,9 @@ def test_should_client_accept_memory_cache() -> None:
 @respx.mock
 def test_should_client_cache_lookup_on_second_call() -> None:
     respx.get(f"{BASE_URL}/lookups/genres/").mock(
-        return_value=httpx.Response(200, json=[
-            {"id": str(uuid4()), "name": "Fantasy", "slug": "fantasy"}
-        ])
+        return_value=httpx.Response(
+            200, json=[{"id": str(uuid4()), "name": "Fantasy", "slug": "fantasy"}]
+        )
     )
     cache = MemoryCache(ttl=3600)
     with WeltenClient(base_url=BASE_URL, token="tok", lookup_cache=cache) as client:

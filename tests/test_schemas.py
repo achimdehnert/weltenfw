@@ -4,47 +4,42 @@ Tests fuer weltenfw.schema — alle Domain-Schemas
 
 from __future__ import annotations
 
-import pytest
-from uuid import UUID, uuid4
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from uuid import uuid4
 
-from weltenfw.schema.world import (
-    WorldSchema,
-    WorldListSchema,
-    WorldCreateInput,
-    WorldUpdateInput,
-)
+import pytest
+
 from weltenfw.schema.character import (
-    CharacterSchema,
     CharacterCreateInput,
     CharacterUpdateInput,
 )
+from weltenfw.schema.location import (
+    LocationCreateInput,
+)
+from weltenfw.schema.lookups import GenreSchema, LookupSchema
 from weltenfw.schema.scene import (
-    SceneSchema,
     SceneCreateInput,
 )
 from weltenfw.schema.story import (
-    StorySchema,
     StoryCreateInput,
-)
-from weltenfw.schema.location import (
-    LocationSchema,
-    LocationCreateInput,
 )
 from weltenfw.schema.tenant import (
     ProvisionRequest,
     ProvisionResponse,
-    TenantSchema,
 )
-from weltenfw.schema.lookups import GenreSchema, MoodSchema, LookupSchema
+from weltenfw.schema.world import (
+    WorldCreateInput,
+    WorldSchema,
+    WorldUpdateInput,
+)
 
-
-NOW = datetime(2026, 3, 1, 12, 0, 0, tzinfo=timezone.utc)
+NOW = datetime(2026, 3, 1, 12, 0, 0, tzinfo=UTC)
 WORLD_ID = uuid4()
 TENANT_ID = uuid4()
 
 
 # --- World ---
+
 
 def test_should_parse_world_schema() -> None:
     data = {
@@ -89,6 +84,7 @@ def test_should_world_schema_be_frozen() -> None:
 
 # --- Character ---
 
+
 def test_should_parse_character_create_input() -> None:
     inp = CharacterCreateInput(world=WORLD_ID, name="Lyra")
     assert inp.name == "Lyra"
@@ -103,6 +99,7 @@ def test_should_character_update_input_all_optional() -> None:
 
 # --- Scene ---
 
+
 def test_should_parse_scene_create_input() -> None:
     story_id = uuid4()
     inp = SceneCreateInput(story=story_id, title="Der Aufbruch")
@@ -111,6 +108,7 @@ def test_should_parse_scene_create_input() -> None:
 
 
 # --- Story ---
+
 
 def test_should_parse_story_create_input() -> None:
     inp = StoryCreateInput(world=WORLD_ID, title="Das erste Licht")
@@ -121,6 +119,7 @@ def test_should_parse_story_create_input() -> None:
 
 # --- Location ---
 
+
 def test_should_parse_location_create_input() -> None:
     inp = LocationCreateInput(world=WORLD_ID, name="Silberwald")
     assert inp.name == "Silberwald"
@@ -128,6 +127,7 @@ def test_should_parse_location_create_input() -> None:
 
 
 # --- Tenant ---
+
 
 def test_should_parse_provision_request() -> None:
     req = ProvisionRequest(username="max", email="max@example.com")
@@ -150,6 +150,7 @@ def test_should_parse_provision_response() -> None:
 
 # --- Lookups ---
 
+
 def test_should_parse_genre_schema() -> None:
     data = {"id": str(uuid4()), "name": "Fantasy", "slug": "fantasy"}
     genre = GenreSchema.model_validate(data)
@@ -159,6 +160,7 @@ def test_should_parse_genre_schema() -> None:
 
 def test_should_schema_module_exports_all_classes() -> None:
     import weltenfw.schema as s
+
     assert hasattr(s, "WorldSchema")
     assert hasattr(s, "CharacterSchema")
     assert hasattr(s, "SceneSchema")

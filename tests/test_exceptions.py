@@ -2,8 +2,6 @@
 Tests fuer weltenfw.exceptions
 """
 
-import pytest
-
 from weltenfw.exceptions import (
     AuthError,
     NotFoundError,
