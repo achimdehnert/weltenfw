@@ -105,3 +105,5 @@ Pilot consumer: `travel-beat` (DriftTales).
   write methods — fixes `TypeError: Object of type UUID is not JSON serializable`
 
 [0.1.0]: https://github.com/achimdehnert/weltenfw/releases/tag/v0.1.0
+
+<!-- wave3-preflight: ci/gate PR-head verify, platform#987 Task A -->
