@@ -56,7 +56,7 @@ class CharacterSchema(BaseSchema):
     role: UUID | None = None
     role_name: str | None = None
     title: str | None = None
-    age: int | None = None
+    age: str | int | None = None
     birth_date: date | None = None
     nationality: str | None = None
     occupation: str | None = None
@@ -79,7 +79,7 @@ class CharacterCreateInput(BaseInput):
     name: str
     role: UUID | None = None
     title: str | None = None
-    age: int | None = None
+    age: str | int | None = None
     birth_date: date | None = None
     nationality: str | None = None
     occupation: str | None = None
@@ -99,7 +99,7 @@ class CharacterUpdateInput(BaseInput):
     name: str | None = None
     role: UUID | None = None
     title: str | None = None
-    age: int | None = None
+    age: str | int | None = None
     birth_date: date | None = None
     nationality: str | None = None
     occupation: str | None = None

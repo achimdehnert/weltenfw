@@ -35,7 +35,7 @@ class LocationSchema(BaseSchema):
     description: str | None = None
     atmosphere: str | None = None
     significance: str | None = None
-    coordinates: str | None = None
+    coordinates: dict | str | None = None
     real_world_reference: str | None = None
     full_path: str | None = None
     is_public: bool = False
@@ -52,7 +52,7 @@ class LocationCreateInput(BaseInput):
     description: str | None = None
     atmosphere: str | None = None
     significance: str | None = None
-    coordinates: str | None = None
+    coordinates: dict | str | None = None
     real_world_reference: str | None = None
     is_public: bool = False
     order: int = 0
@@ -65,7 +65,7 @@ class LocationUpdateInput(BaseInput):
     description: str | None = None
     atmosphere: str | None = None
     significance: str | None = None
-    coordinates: str | None = None
+    coordinates: dict | str | None = None
     real_world_reference: str | None = None
     is_public: bool | None = None
     order: int | None = None
