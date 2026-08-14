@@ -26,7 +26,7 @@ class LocationListSchema(BaseSchema):
 
 class LocationSchema(BaseSchema):
     id: UUID
-    tenant: UUID
+    tenant: UUID | None = None
     world: UUID
     name: str
     parent: UUID | None = None
@@ -41,7 +41,7 @@ class LocationSchema(BaseSchema):
     is_public: bool = False
     order: int = 0
     created_at: datetime
-    updated_at: datetime
+    updated_at: datetime | None = None
 
 
 class LocationCreateInput(BaseInput):

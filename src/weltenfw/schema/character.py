@@ -50,7 +50,7 @@ class CharacterListSchema(BaseSchema):
 
 class CharacterSchema(BaseSchema):
     id: UUID
-    tenant: UUID
+    tenant: UUID | None = None
     world: UUID
     name: str
     role: UUID | None = None
@@ -71,7 +71,7 @@ class CharacterSchema(BaseSchema):
     is_active: bool = True
     notes: str | None = None
     created_at: datetime
-    updated_at: datetime
+    updated_at: datetime | None = None
 
 
 class CharacterCreateInput(BaseInput):
