@@ -15,7 +15,7 @@ from weltenfw.schema.base import BaseSchema
 class LookupSchema(BaseSchema):
     """Basis fuer alle Lookup-Schemas (id + name)."""
 
-    id: UUID
+    id: int | UUID
     name: str
     slug: str | None = None
     order: int | None = None

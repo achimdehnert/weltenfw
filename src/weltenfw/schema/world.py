@@ -28,7 +28,7 @@ class WorldListSchema(BaseSchema):
     name: str
     slug: str
     tenant: UUID | None = None
-    genre: UUID | None = None
+    genre: int | UUID | None = None
     genre_name: str | None = None
     is_public: bool = False
     created_at: datetime
@@ -40,7 +40,7 @@ class WorldSchema(BaseSchema):
     name: str
     slug: str
     subtitle: str | None = None
-    genre: UUID | None = None
+    genre: int | UUID | None = None
     genre_name: str | None = None
     description: str | None = None
     history: str | None = None
@@ -57,7 +57,7 @@ class WorldSchema(BaseSchema):
 
 class WorldCreateInput(BaseInput):
     name: str
-    genre: UUID | None = None
+    genre: int | UUID | None = None
     subtitle: str | None = None
     description: str | None = None
     history: str | None = None
@@ -72,7 +72,7 @@ class WorldCreateInput(BaseInput):
 
 class WorldUpdateInput(BaseInput):
     name: str | None = None
-    genre: UUID | None = None
+    genre: int | UUID | None = None
     subtitle: str | None = None
     description: str | None = None
     history: str | None = None
