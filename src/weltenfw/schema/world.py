@@ -27,7 +27,7 @@ class WorldListSchema(BaseSchema):
     id: UUID
     name: str
     slug: str
-    tenant: UUID
+    tenant: UUID | None = None
     genre: UUID | None = None
     genre_name: str | None = None
     is_public: bool = False
@@ -36,7 +36,7 @@ class WorldListSchema(BaseSchema):
 
 class WorldSchema(BaseSchema):
     id: UUID
-    tenant: UUID
+    tenant: UUID | None = None
     name: str
     slug: str
     subtitle: str | None = None
@@ -52,7 +52,7 @@ class WorldSchema(BaseSchema):
     is_public: bool = False
     notes: str | None = None
     created_at: datetime
-    updated_at: datetime
+    updated_at: datetime | None = None
 
 
 class WorldCreateInput(BaseInput):
