@@ -80,3 +80,16 @@ def test_should_accept_age_as_char_field_and_coordinates_as_json():
         {**basis, "name": "Klinik", "slug": "klinik", "coordinates": {"x": 1, "y": 2}}
     )
     assert ort.coordinates == {"x": 1, "y": 2}
+
+
+def test_should_accept_integer_lookup_ids():
+    # Lookups (BaseLookup) haben AutoField-PKs — Integer, keine UUIDs. Dritter
+    # Realfall 2026-08-14: locations.create() brauchte location_type, die
+    # frisch gesaete Rolle hatte id=1, das Schema verlangte UUID.
+    from weltenfw.schema.location import LocationCreateInput
+    from weltenfw.schema.lookups import LocationTypeSchema
+
+    typ = LocationTypeSchema.model_validate({"id": 1, "name": "Other"})
+    assert typ.id == 1
+    payload = LocationCreateInput(world=uuid.uuid4(), name="Klinik", location_type=1)
+    assert payload.location_type == 1

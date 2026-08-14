@@ -41,7 +41,7 @@ class CharacterListSchema(BaseSchema):
     id: UUID
     world: UUID
     name: str
-    role: UUID | None = None
+    role: int | UUID | None = None
     role_name: str | None = None
     is_protagonist: bool = False
     is_active: bool = True
@@ -53,7 +53,7 @@ class CharacterSchema(BaseSchema):
     tenant: UUID | None = None
     world: UUID
     name: str
-    role: UUID | None = None
+    role: int | UUID | None = None
     role_name: str | None = None
     title: str | None = None
     age: str | int | None = None
@@ -77,7 +77,7 @@ class CharacterSchema(BaseSchema):
 class CharacterCreateInput(BaseInput):
     world: UUID
     name: str
-    role: UUID | None = None
+    role: int | UUID | None = None
     title: str | None = None
     age: str | int | None = None
     birth_date: date | None = None
@@ -97,7 +97,7 @@ class CharacterCreateInput(BaseInput):
 
 class CharacterUpdateInput(BaseInput):
     name: str | None = None
-    role: UUID | None = None
+    role: int | UUID | None = None
     title: str | None = None
     age: str | int | None = None
     birth_date: date | None = None

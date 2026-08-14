@@ -17,7 +17,7 @@ class LocationListSchema(BaseSchema):
     world: UUID
     name: str
     parent: UUID | None = None
-    location_type: UUID | None = None
+    location_type: int | UUID | None = None
     location_type_name: str | None = None
     full_path: str | None = None
     is_public: bool = False
@@ -30,7 +30,7 @@ class LocationSchema(BaseSchema):
     world: UUID
     name: str
     parent: UUID | None = None
-    location_type: UUID | None = None
+    location_type: int | UUID | None = None
     location_type_name: str | None = None
     description: str | None = None
     atmosphere: str | None = None
@@ -48,7 +48,7 @@ class LocationCreateInput(BaseInput):
     world: UUID
     name: str
     parent: UUID | None = None
-    location_type: UUID | None = None
+    location_type: int | UUID | None = None
     description: str | None = None
     atmosphere: str | None = None
     significance: str | None = None
@@ -61,7 +61,7 @@ class LocationCreateInput(BaseInput):
 class LocationUpdateInput(BaseInput):
     name: str | None = None
     parent: UUID | None = None
-    location_type: UUID | None = None
+    location_type: int | UUID | None = None
     description: str | None = None
     atmosphere: str | None = None
     significance: str | None = None
