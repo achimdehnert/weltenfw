@@ -7,7 +7,8 @@ Invariante: 1 WeltenClient = 1 Token = 1 Tenant.
 """
 
 try:  # Die Version steht in pyproject.toml — hier nur noch abgelesen.
-    from importlib.metadata import PackageNotFoundError, version as _paketversion
+    from importlib.metadata import PackageNotFoundError
+    from importlib.metadata import version as _paketversion
 
     __version__ = _paketversion("iil-weltenfw")
 except PackageNotFoundError:  # direkt aus dem Quellbaum importiert
