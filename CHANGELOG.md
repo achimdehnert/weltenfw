@@ -5,6 +5,23 @@ Format: [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.0] — 2026-08-21
+
+### Added
+- `client.items` — Gegenstaende, die ueber Baende tragen (eine Akte, ein
+  Schluessel, ein Messgeraet). Gegenstueck zu weltenhub#58; ohne diese
+  Ressource ist der dortige Typ fuer keinen Aufrufer erreichbar.
+  Schemas: `ItemSchema`, `ItemListSchema`, `ItemCreateInput`, `ItemUpdateInput`.
+  Der Verbleib ist zweigeteilt und darf leer sein — `held_by` ODER `kept_at`
+  ODER keines von beidem, weil der Aufenthalt Teil der Handlung sein kann.
+
+### Fixed
+- `weltenfw.__version__` stand fest auf `0.2.0`, waehrend `pyproject.toml`
+  laengst bei `0.4.4` war. Die Version wird jetzt aus den Paket-Metadaten
+  gelesen statt ein zweites Mal von Hand gepflegt.
+
+---
+
 ## [0.4.1] — 2026-04-23
 
 ### Changed

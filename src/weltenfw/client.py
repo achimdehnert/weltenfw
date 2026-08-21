@@ -14,6 +14,7 @@ from __future__ import annotations
 from weltenfw._http import AsyncHttpTransport, HttpTransport
 from weltenfw.cache import CacheBackend, NullCache
 from weltenfw.resources.characters import CharacterResource
+from weltenfw.resources.items import ItemResource
 from weltenfw.resources.locations import LocationResource
 from weltenfw.resources.lookups import LookupResource
 from weltenfw.resources.scenes import SceneResource
@@ -21,6 +22,7 @@ from weltenfw.resources.stories import StoryResource
 from weltenfw.resources.tenants import TenantResource
 from weltenfw.resources.worlds import WorldResource
 from weltenfw.schema.character import CharacterListSchema, CharacterSchema
+from weltenfw.schema.item import ItemListSchema, ItemSchema
 from weltenfw.schema.location import LocationListSchema, LocationSchema
 from weltenfw.schema.scene import SceneListSchema, SceneSchema
 from weltenfw.schema.story import StoryListSchema, StorySchema
@@ -80,6 +82,13 @@ class WeltenClient:
             base_path="/stories",
             schema_cls=StorySchema,
             list_schema_cls=StoryListSchema,
+        )
+        self.items = ItemResource(
+            http=self._http,
+            async_http=self._async_http,
+            base_path="/items",
+            schema_cls=ItemSchema,
+            list_schema_cls=ItemListSchema,
         )
         self.locations = LocationResource(
             http=self._http,
