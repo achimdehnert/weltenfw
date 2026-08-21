@@ -6,7 +6,12 @@ Typed REST client and Pydantic schemas for the WeltenHub Story Universe API.
 Invariante: 1 WeltenClient = 1 Token = 1 Tenant.
 """
 
-__version__ = "0.2.0"
+try:  # Die Version steht in pyproject.toml — hier nur noch abgelesen.
+    from importlib.metadata import PackageNotFoundError, version as _paketversion
+
+    __version__ = _paketversion("iil-weltenfw")
+except PackageNotFoundError:  # direkt aus dem Quellbaum importiert
+    __version__ = "0.0.0+quelle"
 
 from weltenfw.backends.base import (
     AbstractWorldBackend,
